@@ -3,6 +3,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config()
 const app = express()
 const cors = require('cors')
+const ObjectId = require('mongodb').ObjectId;
 const port = 5000;
 
 app.use(cors())
@@ -18,7 +19,20 @@ async function run() {
         console.log("connected to database");
         const database = client.db("genusCarMechanic");
         const servicesCollection = database.collection("services");
+        // GET API 
+        app.get('/services', async (req, res) => {
 
+            const services = await servicesCollection.find({}).toArray()
+            res.json(services)
+        })
+
+        // get single service 
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const service = await servicesCollection.findOne({ _id: ObjectId(id) })
+            res.json(service)
+        })
+        // POST API
         app.post('/services', async (req, res) => {
 
             const service = req.body;
