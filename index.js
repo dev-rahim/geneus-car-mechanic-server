@@ -39,7 +39,19 @@ async function run() {
             const result = await servicesCollection.insertOne(service)
             res.json(result)
         })
-
+        // Delete API 
+        app.delete('/services/:id', async (req, res) => {
+            // console.log('delete hitted');
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await servicesCollection.deleteOne(query)
+            res.json(result)
+            if (result.deletedCount === 1) {
+                console.log("Successfully deleted one document.");
+            } else {
+                console.log("No documents matched the query. Deleted 0 documents.");
+            }
+        })
     } finally {
         // await client.close();
     }
